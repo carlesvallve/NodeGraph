@@ -1,0 +1,60 @@
+{
+	"id": 2,
+	"name": "I am Map2",
+	"background": "map-background-2",
+	
+	"stages": [
+		{
+			"id": 1,
+			"mission": {
+				"type": "scenario",
+				"id": 1
+			},
+			"location": {
+				"x": 4,
+				"y": 3
+			}
+		},
+
+		{
+			"id": 2,
+			"mission": {
+				"type": "puzzle",
+				"id": 2,
+				"characters": [ "Lisa"]
+			},
+			"location": {
+				"x": 4,
+				"y": 4
+
+			}
+		},
+
+		{
+			"id": 3,
+			"mission": {
+				"type": "puzzle",
+				"id": 3,
+				"characters": [ "Nyavi, Lisa, Noa"]
+			},
+			"location": {
+				"x": 4,
+				"y": 5
+			}
+		},
+
+		{
+			"id": 4,
+			"mission": {
+				"type": "rythm",
+				"id": 4,
+				"difficulty": 3
+			},
+			"location": {
+				"x": 4,
+				"y": 6
+			}
+		}
+	]	
+
+}

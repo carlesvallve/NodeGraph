@@ -1,0 +1,94 @@
+{
+	"songId": "Song1",
+	"trackCount": 3,
+	"notes": [
+		{
+			"timestamp": 120000,
+			"duration": 0,
+			"track": 0,
+			"type": 1,
+			"toy": 0,
+			"tapCount": 0
+		},
+		{
+			"timestamp": 160000,
+			"duration": 0,
+			"track": 1,
+			"type": 1,
+			"toy": 0,
+			"tapCount": 0
+		},
+		{
+			"timestamp": 180000,
+			"duration": 0,
+			"track": 2,
+			"type": 1,
+			"toy": 0,
+			"tapCount": 0
+		},
+		{
+			"timestamp": 200000,
+			"duration": 0,
+			"track": 0,
+			"type": 1,
+			"toy": 0,
+			"tapCount": 0
+		},
+		{
+			"timestamp": 220000,
+			"duration": 0,
+			"track": 2,
+			"type": 1,
+			"toy": 0,
+			"tapCount": 0
+		},
+		{
+			"timestamp": 230000,
+			"duration": 90000,
+			"track": 1,
+			"type": 2,
+			"toy": 1,
+			"tapCount": 5
+		},
+		{
+			"timestamp": 340000,
+			"duration": 0,
+			"track": 2,
+			"type": 1,
+			"toy": 0,
+			"tapCount": 0
+		},
+		{
+			"timestamp": 450000,
+			"duration": 0,
+			"track": 1,
+			"type": 1,
+			"toy": 0,
+			"tapCount": 0
+		},
+		{
+			"timestamp": 560000,
+			"duration": 0,
+			"track": 1,
+			"type": 1,
+			"toy": 0,
+			"tapCount": 0
+		},
+		{
+			"timestamp": 560000,
+			"duration": 0,
+			"track": 2,
+			"type": 1,
+			"toy": 0,
+			"tapCount": 0
+		},
+		{
+			"timestamp": 870000,
+			"duration": 0,
+			"track": 0,
+			"type": 1,
+			"toy": 0,
+			"tapCount": 0
+		}
+	]
+}

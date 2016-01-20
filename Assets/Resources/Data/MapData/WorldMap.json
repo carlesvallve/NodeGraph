@@ -1,0 +1,21 @@
+﻿{
+	"background": "worldmap-background",
+
+	"maps": [
+		{
+			"id": "Map1",
+			"location": {
+				"x": 4,
+				"y": 9
+			}
+		},
+		{
+			"id": "Map2",
+			"location": {
+				"x": 7,
+				"y": 9
+			}
+		}
+	]
+
+}
