@@ -10,7 +10,7 @@ using System.Collections;
  
 //namespace DepthFirst
 //{
-class Program {
+//class Program {
 	public class Person {
 		public Person(string name) {
 			this.name = name;
@@ -42,12 +42,22 @@ class Program {
 		public int X { get; set; }
 		public int Y { get; set; }
 		public Color color { get; set; }
+
+		public DragAndDrop ui { get; set; }
 	}
 
 
 	public class DepthFirstAlgorithm {
+
+		public GameObject container;
+
 		
 		public Person BuildFriendGraph() {
+
+			this.container = new GameObject(); //(GameObject)GameObject.Instantiate(personPrefab);
+			this.container.name = "Container";
+
+
 			Person Aaron = new Person("Aaron");
 			Person Betty = new Person("Betty");
 			Person Brian = new Person("Brian");
@@ -66,6 +76,7 @@ class Program {
 			return Aaron;
 		}
 
+
 		public Person Search(Person root, string nameToSearchFor) {
 			Debug.Log (">>> " + nameToSearchFor + " -> " + root.name + " " + (nameToSearchFor == root.name));
 			if (nameToSearchFor == root.name)
@@ -80,13 +91,11 @@ class Program {
 			return personFound;
 		}
 
+
 		public void Traverse(Person root, GameObject personPrefab, GameObject pathPrefab) {
 			Debug.Log(root.name);
-
-			if (personPrefab != null) {
-				Render(root, personPrefab, pathPrefab);
-			}
-
+			Render(root, personPrefab, pathPrefab);
+			
 			for (int i = 0; i < root.Friends.Count; i++) {
 				Traverse(root.Friends[i], personPrefab, pathPrefab);
 			}
@@ -97,10 +106,15 @@ class Program {
 			// instantiate person prefab
 			GameObject go = (GameObject)GameObject.Instantiate(personPrefab);
 			go.name = root.name;
+			go.transform.SetParent(container.transform);
 			go.transform.localPosition = new Vector3(root.X, root.Y, 0);
 
+			// get go's script
+			root.ui = go.GetComponent<DragAndDrop>();
+			root.ui.Init(root);
+
 			// set person text params
-			Transform t = go.transform.Find("Text");
+			/*Transform t = root.go.transform.Find("Text");
 			if (t != null) {
 				t.GetComponent<MeshRenderer>().sortingOrder = 10;
 				TextMesh text = t.GetComponent<TextMesh>();
@@ -109,14 +123,23 @@ class Program {
 			}
 
 			// draw lines towards friends
+			Transform tr = root.go.transform.Find("Paths");
+			if (tr != null) { 
+				GameObject.Destroy(tr.gameObject); 
+			}
+
+			GameObject container = new GameObject();
+			container.transform.SetParent(root.go.transform, false);
+			container.name = "Paths";
+
 			for (int i = 0; i < root.Friends.Count; i++) {
 				Person friend = root.Friends[i];
-				GeneratePathLine(root, friend, go, pathPrefab);
-			}
+				GeneratePathLine(container, root, friend, pathPrefab);
+			}*/
 		}
 
 
-		public void GeneratePathLine (Person root, Person friend, GameObject go, GameObject pathPrefab) {
+		/*public void GeneratePathLine (GameObject rootContainer, Person root, Person friend, GameObject pathPrefab) {
 			int radius = 25;
 			int distanceDots = 25;
 
@@ -133,7 +156,7 @@ class Program {
 
 			// create pathPoint container inside the node
 			GameObject container = new GameObject();
-			container.transform.SetParent(go.transform, false);
+			container.transform.SetParent(rootContainer.transform, false);
 			container.name = "Path";
 
 			// create and locate line points
@@ -146,7 +169,7 @@ class Program {
 				point.transform.Translate(vec.normalized * radius);
 				point.gameObject.SetActive(true);
 			}
-		}
+		}*/
 
 	}
 
@@ -154,7 +177,7 @@ class Program {
 
 	
 
-	public void Main(GameObject personPrefab, GameObject pathPrefab) { // string[] args
+	/*public void Main(GameObject personPrefab, GameObject pathPrefab) { // string[] args
 		
 
 		DepthFirstAlgorithm b = new DepthFirstAlgorithm();
@@ -168,13 +191,13 @@ class Program {
 		Debug.Log(p == null ? "Person not found" : p.name);
 		//p = b.Search(root, "Alex");
 		//Debug.Log(p == null ? "Person not found" : p.name);
-	}
+	}*/
 
 
 	
 
 
 	
-}
+//}
 
 //}
