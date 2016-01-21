@@ -14,6 +14,13 @@ public class Scene : MonoBehaviour {
 	void Start () {
 		instance = this;
 
+		// initiaize map camera
+		MapCamera mapCamera = GetComponent<MapCamera>();
+		mapCamera.Init(
+			Camera.main, 
+			new Bounds(Vector3.zero, new Vector3(1000, 1000, 0))
+		);
+
 		// create node graph
 		NodeGraph b = new NodeGraph();
 		Dictionary<string, Node> nodes = b.BuildNodeGraph();

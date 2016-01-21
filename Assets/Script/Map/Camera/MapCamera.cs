@@ -5,9 +5,11 @@ using UnityCamera = UnityEngine.Camera;
 
 using DG.Tweening;
 
-namespace Zap.Map.Camera {
+//namespace Zap.Map.Camera {
 
 	public class MapCamera : MonoBehaviour {
+
+		public static bool enabled = true;
 
 		// accessor to refer to the map unity camera 
 		public UnityCamera currentCamera { get; set; }
@@ -37,14 +39,20 @@ namespace Zap.Map.Camera {
 		Tween zoomTween;
 
 
-		public void Init (UnityCamera currentCamera) {
+		public void Init (UnityCamera currentCamera, Bounds bounds) {
 			this.currentCamera = currentCamera;
+			this.bounds = bounds;
+
 			maxZoom = ((resHeight / 2) / pixelsPerUnit);
 			currentCamera.orthographicSize = maxZoom;
 		}
 
 
 		void Update () {
+			if (!enabled) { 
+				return; 
+			}
+			
 			// apply pan
 			if (!zooming) {
 				SetPanInputEditor();
@@ -290,4 +298,4 @@ namespace Zap.Map.Camera {
 
 	}
 
-}
+//}

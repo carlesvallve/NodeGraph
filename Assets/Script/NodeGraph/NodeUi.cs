@@ -33,6 +33,8 @@ public class NodeUi : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
 
 	public void OnPointerDown(PointerEventData ped) {
+		MapCamera.enabled = false;
+
 		mouseDown = true;
 		startPos = transform.position;
 		startMousePos = Input.mousePosition;
@@ -40,6 +42,8 @@ public class NodeUi : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
 
 	public void OnPointerUp(PointerEventData ped) {
+		MapCamera.enabled = true;
+
 		mouseDown = false;
 	}
 
