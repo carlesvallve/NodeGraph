@@ -52,7 +52,7 @@ using DG.Tweening;
 			if (!enabled) { 
 				return; 
 			}
-			
+
 			// apply pan
 			if (!zooming) {
 				SetPanInputEditor();
@@ -268,11 +268,13 @@ using DG.Tweening;
 		// =========================================
 
 		private void ConstrainToBounds () {
-			ConstrainToBounds(currentCamera.transform.position, 0, true);
+			//ConstrainToBounds(currentCamera.transform.position, 0, true);
 		}
 
 
 		private Vector3 ConstrainToBounds (Vector3 pos, float atZoom = 0, bool updatePosition = true) {
+			return pos;
+
 			if (atZoom == 0) { atZoom = currentCamera.orthographicSize; }
 			// calculate bg sprite bounds
 			float vertExtent = atZoom; //currentCamera.orthographicSize;  

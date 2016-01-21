@@ -5,148 +5,152 @@ using System.Linq;
 
 public class NodeGraph {
 
+	// initializes nodegraph and fills it with nodes and relationships between them
 
-		public Dictionary<string, Node> BuildNodeGraph() {
-			// set nodes
-			Dictionary<string, Node> nodes = new Dictionary<string, Node>() {
-				{ "Aaron", new Node("Aaron") },
-				{ "Betty", new Node("Betty") },
-				{ "Brian", new Node("Brian") },
-				{ "Catherine", new Node("Catherine") },
-				{ "Carson", new Node("Carson") },
-				{ "Darian", new Node("Darian") },
-				{ "Derek", new Node("Derek") }
-			};
+	public Dictionary<string, Node> BuildNodeGraph() {
+		// set nodes
+		Dictionary<string, Node> nodes = new Dictionary<string, Node>() {
+			{ "Aaron", new Node("Aaron") },
+			{ "Betty", new Node("Betty") },
+			{ "Brian", new Node("Brian") },
+			{ "Catherine", new Node("Catherine") },
+			{ "Carson", new Node("Carson") },
+			{ "Darian", new Node("Darian") },
+			{ "Derek", new Node("Derek") }
+		};
 
-			// set node connections
-			nodes["Aaron"].SetLink(nodes["Betty"]);
-			nodes["Aaron"].SetLink(nodes["Brian"]);
-			nodes["Betty"].SetLink(nodes["Catherine"]);
-			nodes["Betty"].SetLink(nodes["Darian"]);
-			nodes["Brian"].SetLink(nodes["Carson"]);
-			nodes["Brian"].SetLink(nodes["Derek"]);
+		// set node connections
+		nodes["Aaron"].SetLink(nodes["Betty"]);
+		nodes["Aaron"].SetLink(nodes["Darian"]);
+		nodes["Aaron"].SetLink(nodes["Brian"]);
+		nodes["Betty"].SetLink(nodes["Catherine"]);
+		nodes["Betty"].SetLink(nodes["Darian"]);
+		nodes["Brian"].SetLink(nodes["Carson"]);
+		nodes["Brian"].SetLink(nodes["Derek"]);
 
-			return nodes;
+		return nodes;
+	}
+
+
+	// creates node gameobjects and itializes their ui
+
+	public void RenderNodeGraph(GameObject nodePrefab, Dictionary<string, Node> nodes) {
+		foreach(KeyValuePair<string, Node> entry in nodes) {
+			Node node = entry.Value;
+
+			// instantiate node prefab and initialize his ui
+			GameObject go = (GameObject)GameObject.Instantiate(nodePrefab);
+			node.ui = go.GetComponent<NodeUi>();
+			node.ui.Init(node);
 		}
+	}
 
 
-		// creates node gameobjects and itializes their ui
+	// not used for anything. Recursevily traverses all nodes in the nodegraph
 
-		public void RenderNodeGraph(GameObject nodePrefab, Dictionary<string, Node> nodes) {
-			foreach(KeyValuePair<string, Node> entry in nodes) {
-				Node node = entry.Value;
-
-				// instantiate node prefab and initialize his ui
-				GameObject go = (GameObject)GameObject.Instantiate(nodePrefab);
-				node.ui = go.GetComponent<NodeUi>();
-				node.ui.Init(node);
-			}
+	public void Traverse(Node root) {
+		Debug.Log(root.name);
+		
+		for (int i = 0; i < root.Links.Count; i++) {
+			Traverse(root.Links[i]);
 		}
+	}
 
 
-		// not used for anything. Recursevily traverses all nodes in the nodegraph
+	// path finding based on recursive a-star
 
-		public void Traverse(Node root) {
-			Debug.Log(root.name);
-			
-			for (int i = 0; i < root.Links.Count; i++) {
-				Traverse(root.Links[i]);
-			}
+	public List<Node> SearchPath (Node from, Node to) {
+		List<Node> visited = new List<Node>();
+		List<Node> path = AstarRecursive(from, to, visited);
+		
+		if (path == null) {
+			Debug.LogError("No path was found from " + from.name + " to " + to.name);
+		} else {
+			path.Reverse();
+			LogPath(path);
 		}
-
-
-		// path finding based on recursive a-star
-
-		public List<Node> SearchPath (Node from, Node to) {
-			List<Node> visited = new List<Node>();
-			List<Node> path = AstarRecursive(from, to, visited);
 			
-			if (path == null) {
-				Debug.LogError("No path was found from " + from.name + " to " + to.name);
-			} else {
-				path.Reverse();
-				LogPath(path);
-			}
-				
-			return path;
-		}
+		return path;
+	}
 
 
-		public List<Node> AstarRecursive(Node from, Node to, List<Node> visited){
-			// escape if current node is already visited
-			if (visited.Contains(from)){
-				return null;
-			}
-			
-			visited.Add(from);
+	// a-star single iteration
 
-			// end recursiveness if current node if the goal
-			if (from == to){
-				List<Node> TmpL = new List<Node>();
-				TmpL.Add(from);
-
-				return TmpL;
-			}
-
-			// generate a temp list of not-visited friends
-			List<Node> tmp = new List<Node>();
-			foreach (Node link in from.Links) {
-				if (!visited.Contains(link)) {
-					tmp.Add(link);
-				}
-			}
-
-			// we then can order the list by any desired conditions, 
-			// in this case distance
-			tmp = tmp.OrderBy(t => {
-				Vector2 p1 = new Vector2(t.X, t.Y);
-				Vector2 p2 = new Vector2(to.X, to.Y);
-				return (p1 - p2).sqrMagnitude;
-			}).ToList();
-
-
-			// This is how it would look if we could use Linq...
-			
-			/*List<Node> tmp =  nx.Friends
-			// if a friend is not visited
-			.Where (c => !visited.Contains(c) ).ToList(); 
-			// we can order here by several conditions, in this case distance         
-			.OrderBy(t => {
-				Vector2 p1 = new Vector2(t.X, t.Y);
-				Vector2 p2 = new Vector2(goal.X, goal.Y);
-				return (p1 - p2).sqrMagnitude;
-			}).ToList();*/
-
-			
-			if (tmp != null){
-				foreach (Node ww in tmp){
-					List<Node> TmpR =  new List<Node>();
-
-					TmpR = AstarRecursive(ww, to, visited);
-					if (TmpR != null) {
-						TmpR.Add(from);
-						return TmpR;
-					}
-				}
-			}
-
+	public List<Node> AstarRecursive(Node from, Node to, List<Node> visited){
+		// escape if current node is already visited
+		if (visited.Contains(from)){
 			return null;
 		}
+		
+		visited.Add(from);
 
+		// end recursiveness if current node if the goal
+		if (from == to){
+			List<Node> TmpL = new List<Node>();
+			TmpL.Add(from);
 
-		// prints the path if any was found
-
-		public void LogPath (List<Node> path) {
-			if (path == null) { return; }
-
-			string str = "";
-			for (int i = 0; i < path.Count; i++) {
-
-				str += path[i].name; 
-				if (i < path.Count - 1) { str += " -> "; }
-			}
-
-			Debug.Log ("Path [ " + str + " ]");
+			return TmpL;
 		}
 
+		// generate a temp list of not-visited friends
+		List<Node> tmp = new List<Node>();
+		foreach (Node link in from.Links) {
+			if (!visited.Contains(link)) {
+				tmp.Add(link);
+			}
+		}
+
+		// we then can order the list by any desired conditions, 
+		// in this case distance
+		tmp = tmp.OrderBy(t => {
+			Vector2 p1 = new Vector2(t.X, t.Y);
+			Vector2 p2 = new Vector2(to.X, to.Y);
+			return (p1 - p2).sqrMagnitude;
+		}).ToList();
+
+
+		// This is how it would look if we could use Linq...
+
+		/*List<Node> tmp =  nx.Friends
+		// if a friend is not visited
+		.Where (c => !visited.Contains(c) ).ToList(); 
+		// we can order here by several conditions, in this case distance         
+		.OrderBy(t => {
+			Vector2 p1 = new Vector2(t.X, t.Y);
+			Vector2 p2 = new Vector2(goal.X, goal.Y);
+			return (p1 - p2).sqrMagnitude;
+		}).ToList();*/
+
+		
+		if (tmp != null){
+			foreach (Node ww in tmp){
+				List<Node> TmpR =  new List<Node>();
+
+				TmpR = AstarRecursive(ww, to, visited);
+				if (TmpR != null) {
+					TmpR.Add(from);
+					return TmpR;
+				}
+			}
+		}
+
+		return null;
 	}
+
+
+	// logs the path if any was found
+
+	public void LogPath (List<Node> path) {
+		if (path == null) { return; }
+
+		string str = "";
+		for (int i = 0; i < path.Count; i++) {
+
+			str += path[i].name; 
+			if (i < path.Count - 1) { str += " -> "; }
+		}
+
+		Debug.Log ("Path [ " + str + " ]");
+	}
+
+}
