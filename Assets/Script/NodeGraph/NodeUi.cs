@@ -72,9 +72,9 @@ public class NodeUi : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 		container.transform.SetParent(transform, false);
 		container.name = "Paths";
 
-		for (int i = 0; i < node.Friends.Count; i++) {
-			Node friend = node.Friends[i];
-			GenerateConnection(container, friend);
+		for (int i = 0; i < node.Links.Count; i++) {
+			Node link = node.Links[i];
+			GenerateConnection(container, link);
 		}
 	}
 

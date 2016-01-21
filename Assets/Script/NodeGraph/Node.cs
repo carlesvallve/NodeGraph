@@ -11,9 +11,9 @@ public class Node {
 	public Color color { get; set; }
 	public NodeUi ui { get; set; }
 
-	private List<Node> FriendsList = new List<Node>();
-	public List<Node> Friends {
-		get { return FriendsList; }
+	private List<Node> LinksList = new List<Node>();
+	public List<Node> Links {
+		get { return LinksList; }
 	}
 
 
@@ -27,23 +27,23 @@ public class Node {
 	}
 
 
-	public void SetFriend (Node p) {
-		// escape if we are already friends
-		if (IsFriendOf(p)) {
+	public void SetLink (Node p) {
+		// escape if we are already linked
+		if (IsLinkedTo(p)) {
 			return;
 		}
 
-		// add new friend to friend list
-		FriendsList.Add(p);
+		// link me to given node
+		LinksList.Add(p);
 
-		// friends are always corresponded
-		p.SetFriend(this); 
+		// links are always bidirectional
+		p.SetLink(this); 
 	}
 
 
-	public bool IsFriendOf(Node p) {
-		foreach (Node friend in Friends) {
-			if (p == friend) { return true; }
+	public bool IsLinkedTo (Node p) {
+		foreach (Node link in Links) {
+			if (p == link) { return true; }
 		}
 
 		return false;
