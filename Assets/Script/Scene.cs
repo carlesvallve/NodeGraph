@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-//using DepthFirst;
+using DepthFirst;
 
 public class Scene : MonoBehaviour {
 
@@ -13,8 +13,6 @@ public class Scene : MonoBehaviour {
 
 	void Start () {
 		instance = this;
-		//Program program = new Program();
-		//program.Main(personPrefab, pathPrefab);
 
 		DepthFirstAlgorithm b = new DepthFirstAlgorithm();
 		Person root = b.BuildFriendGraph();
@@ -25,12 +23,6 @@ public class Scene : MonoBehaviour {
 		Debug.Log("\nSearch\n------");
 		Person p = b.Search(root, "Catherine");
 		Debug.Log(p == null ? "Person not found" : p.name);
-	}
-
-
-
-	public void RenderAllConnections () {
-		
 	}
 	
 }

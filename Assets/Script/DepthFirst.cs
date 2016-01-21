@@ -8,9 +8,8 @@ using System.Collections;
 
 
  
-//namespace DepthFirst
-//{
-//class Program {
+namespace DepthFirst {
+
 	public class Person {
 		public Person(string name) {
 			this.name = name;
@@ -54,9 +53,8 @@ using System.Collections;
 		
 		public Person BuildFriendGraph() {
 
-			this.container = new GameObject(); //(GameObject)GameObject.Instantiate(personPrefab);
+			this.container = new GameObject();
 			this.container.name = "Container";
-
 
 			Person Aaron = new Person("Aaron");
 			Person Betty = new Person("Betty");
@@ -78,7 +76,7 @@ using System.Collections;
 
 
 		public Person Search(Person root, string nameToSearchFor) {
-			Debug.Log (">>> " + nameToSearchFor + " -> " + root.name + " " + (nameToSearchFor == root.name));
+			//Debug.Log (">>> " + nameToSearchFor + " -> " + root.name + " " + (nameToSearchFor == root.name));
 			if (nameToSearchFor == root.name)
 				return root;
 
@@ -109,95 +107,12 @@ using System.Collections;
 			go.transform.SetParent(container.transform);
 			go.transform.localPosition = new Vector3(root.X, root.Y, 0);
 
-			// get go's script
+			// initialize person ui
 			root.ui = go.GetComponent<DragAndDrop>();
 			root.ui.Init(root);
-
-			// set person text params
-			/*Transform t = root.go.transform.Find("Text");
-			if (t != null) {
-				t.GetComponent<MeshRenderer>().sortingOrder = 10;
-				TextMesh text = t.GetComponent<TextMesh>();
-				//text.color = root.color;
-				text.text = root.name;
-			}
-
-			// draw lines towards friends
-			Transform tr = root.go.transform.Find("Paths");
-			if (tr != null) { 
-				GameObject.Destroy(tr.gameObject); 
-			}
-
-			GameObject container = new GameObject();
-			container.transform.SetParent(root.go.transform, false);
-			container.name = "Paths";
-
-			for (int i = 0; i < root.Friends.Count; i++) {
-				Person friend = root.Friends[i];
-				GeneratePathLine(container, root, friend, pathPrefab);
-			}*/
 		}
-
-
-		/*public void GeneratePathLine (GameObject rootContainer, Person root, Person friend, GameObject pathPrefab) {
-			int radius = 25;
-			int distanceDots = 25;
-
-			// get line vector
-			Vector2 p1 = new Vector3(root.X, root.Y, 0); 
-			Vector2 p2 = new Vector3(friend.X, friend.Y, 0);
-			Vector2 vec = (p2 - p1);
-			vec -= (vec.normalized * (radius * 2));
-
-			// get number of points to render, and at which step
-			float length = vec.magnitude;
-			int maxPoints = (int)Mathf.Round(length / distanceDots);
-			float step = (length) / (maxPoints + 1);
-
-			// create pathPoint container inside the node
-			GameObject container = new GameObject();
-			container.transform.SetParent(rootContainer.transform, false);
-			container.name = "Path";
-
-			// create and locate line points
-			for (int i = 1; i <= maxPoints; i++) {
-				GameObject point = (GameObject)GameObject.Instantiate<GameObject>(pathPrefab);
-				point.name = "MapPathPoint" + i;
-				point.transform.SetParent(container.transform);
-				point.transform.localPosition = Vector3.zero;
-				point.transform.Translate(vec.normalized * step * i);
-				point.transform.Translate(vec.normalized * radius);
-				point.gameObject.SetActive(true);
-			}
-		}*/
-
 	}
 
+}
 
 
-	
-
-	/*public void Main(GameObject personPrefab, GameObject pathPrefab) { // string[] args
-		
-
-		DepthFirstAlgorithm b = new DepthFirstAlgorithm();
-		Person root = b.BuildFriendGraph();
-		
-		Debug.Log("Traverse\n------");
-		b.Traverse(root, personPrefab, pathPrefab);
-
-		Debug.Log("\nSearch\n------");
-		Person p = b.Search(root, "Catherine");
-		Debug.Log(p == null ? "Person not found" : p.name);
-		//p = b.Search(root, "Alex");
-		//Debug.Log(p == null ? "Person not found" : p.name);
-	}*/
-
-
-	
-
-
-	
-//}
-
-//}

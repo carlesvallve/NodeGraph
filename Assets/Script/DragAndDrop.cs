@@ -3,6 +3,9 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 
+using DepthFirst;
+
+
 public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
 	private Person root;
@@ -97,7 +100,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		// create and locate line points
 		for (int i = 1; i <= maxPoints; i++) {
 			GameObject point = (GameObject)GameObject.Instantiate<GameObject>(Scene.instance.pathPrefab);
-			point.name = "MapPathPoint" + i;
+			point.name = "Point" + i;
 			point.transform.SetParent(container.transform);
 			point.transform.localPosition = Vector3.zero;
 			point.transform.Translate(vec.normalized * step * i);
