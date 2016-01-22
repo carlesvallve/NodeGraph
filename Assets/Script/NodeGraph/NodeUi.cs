@@ -2,22 +2,23 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
+using System;
 
 
-public class NodeUi : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
+public class NodeUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler {
+
+	public delegate void OnClickHandler();
+	public event OnClickHandler OnClick;
 
 	private Node node;
-
-	private bool mouseDown = false;
-	private Vector3 startMousePos;
-	private Vector3 startPos;
+	private bool drag = false;
 
 
-	public void Init(Node node) {
+	public void Init(GameObject container, Node node) {
 		this.node = node;
 
 		name = node.name;
-		transform.SetParent(Scene.instance.transform);
+		transform.SetParent(container.transform);
 		transform.localPosition = new Vector3(node.X, node.Y, 0);
 
 		Transform t = transform.Find("Text");
@@ -28,44 +29,58 @@ public class NodeUi : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 			text.text = node.name;
 		}
 
-		RenderConnections();
+		GenerateConnections();
 	}
 
 
-	public void OnPointerDown(PointerEventData ped) {
+	public void OnDestroy () {
+		// clear events
+		OnClick = null;
+	}
+	
+
+	// Drag Node
+
+	public void OnBeginDrag (PointerEventData eventData) {
 		MapCamera.enabled = false;
-
-		mouseDown = true;
-		startPos = transform.position;
-		startMousePos = Input.mousePosition;
 	}
 
 
-	public void OnPointerUp(PointerEventData ped) {
-		MapCamera.enabled = true;
+	public void OnDrag (PointerEventData eventData) {
+		Vector3 pos = MapCamera.currentCamera.ScreenToWorldPoint(Input.mousePosition);
 
-		mouseDown = false;
-	}
+		node.X = Mathf.RoundToInt(pos.x);
+		node.Y =  Mathf.RoundToInt(pos.y);
+		transform.localPosition = new Vector3(node.X, node.Y, 0); 
 
-
-	void Update () {
-		if (mouseDown) {
-			Vector3 currentPos = Input.mousePosition;
-			Vector3 diff = currentPos - startMousePos;
-			Vector3 pos = startPos + diff;
-			transform.position = pos;
-			node.X = Mathf.RoundToInt(pos.x);
-			node.Y =  Mathf.RoundToInt(pos.y);
-
-			NodeUi[] arr = transform.root.GetComponentsInChildren<NodeUi>();
-			foreach (NodeUi ui in arr) {
-				ui.RenderConnections();
-			}
+		NodeUi[] arr = transform.root.GetComponentsInChildren<NodeUi>();
+		foreach (NodeUi ui in arr) {
+			ui.GenerateConnections();
 		}
 	}
 
 
-	public void RenderConnections () {
+	public void OnEndDrag (PointerEventData eventData) {
+		MapCamera.enabled = true;
+	}
+
+
+	// Click on node
+
+	public void OnPointerClick (PointerEventData eventData) {
+		// if camera is disabled is because we were dragging, so escape
+		if (!MapCamera.enabled) { return; }
+
+		// emit click event
+		if (OnClick != null) {
+			OnClick.Invoke();
+		}
+	}
+
+
+	// Update Connections
+
+	public void GenerateConnections () {
 		// draw lines towards friends
 		Transform tr = transform.Find("Paths");
 		if (tr != null) { 
@@ -83,7 +98,7 @@ public class NodeUi : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 	}
 
 
-	private void GenerateConnection (GameObject rootContainer, Node friend) {
+	private void GenerateConnection (GameObject rootContainer, Node link) {
 		// create path container inside the node
 		GameObject container = new GameObject();
 		container.transform.SetParent(rootContainer.transform, false);
@@ -95,7 +110,7 @@ public class NodeUi : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
 		// get line vector
 		Vector2 p1 = new Vector3(node.X, node.Y, 0); 
-		Vector2 p2 = new Vector3(friend.X, friend.Y, 0);
+		Vector2 p2 = new Vector3(link.X, link.Y, 0);
 		Vector2 vec = (p2 - p1);
 		vec -= (vec.normalized * (dotRadius * 2));
 

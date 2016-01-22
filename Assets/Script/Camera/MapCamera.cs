@@ -12,7 +12,7 @@ using DG.Tweening;
 		public static bool enabled = true;
 
 		// accessor to refer to the map unity camera 
-		public UnityCamera currentCamera { get; set; }
+		public static UnityCamera currentCamera { get; set; }
 
 		// camera bounds
 		public Bounds bounds { get; set; }
@@ -40,7 +40,7 @@ using DG.Tweening;
 
 
 		public void Init (UnityCamera currentCamera, Bounds bounds) {
-			this.currentCamera = currentCamera;
+			MapCamera.currentCamera = currentCamera;
 			this.bounds = bounds;
 
 			maxZoom = ((resHeight / 2) / pixelsPerUnit);
@@ -268,12 +268,12 @@ using DG.Tweening;
 		// =========================================
 
 		private void ConstrainToBounds () {
-			//ConstrainToBounds(currentCamera.transform.position, 0, true);
+			ConstrainToBounds(currentCamera.transform.position, 0, true);
 		}
 
 
 		private Vector3 ConstrainToBounds (Vector3 pos, float atZoom = 0, bool updatePosition = true) {
-			return pos;
+			//return pos;
 
 			if (atZoom == 0) { atZoom = currentCamera.orthographicSize; }
 			// calculate bg sprite bounds

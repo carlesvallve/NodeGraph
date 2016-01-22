@@ -35,13 +35,21 @@ public class NodeGraph {
 	// creates node gameobjects and itializes their ui
 
 	public void RenderNodeGraph(GameObject nodePrefab, Dictionary<string, Node> nodes) {
+		GameObject container = new GameObject();
+		container.transform.SetParent(Scene.instance.transform);
+		container.name = "Nodes";
+
 		foreach(KeyValuePair<string, Node> entry in nodes) {
 			Node node = entry.Value;
 
 			// instantiate node prefab and initialize his ui
 			GameObject go = (GameObject)GameObject.Instantiate(nodePrefab);
 			node.ui = go.GetComponent<NodeUi>();
-			node.ui.Init(node);
+			node.ui.Init(container, node);
+
+			node.ui.OnClick += () => {
+				Scene.instance.ClickOnNode(node);
+			};
 		}
 	}
 
