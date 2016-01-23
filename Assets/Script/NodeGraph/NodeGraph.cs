@@ -50,6 +50,10 @@ public class NodeGraph {
 			node.ui.OnClick += () => {
 				Scene.instance.ClickOnNode(node);
 			};
+
+			node.ui.OnDragging += () => {
+				Scene.instance.DragOnNode(node);
+			};
 		}
 	}
 

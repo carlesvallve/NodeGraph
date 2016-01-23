@@ -2,15 +2,21 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 
 
 public class NodeUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler {
 
+	public delegate void OnDraggingHandler();
+	public event OnDraggingHandler OnDragging;
+
 	public delegate void OnClickHandler();
 	public event OnClickHandler OnClick;
 
 	private Node node;
+	private Dictionary<Node, NodePath> pathDic = new Dictionary<Node, NodePath>();
+
 	private bool drag = false;
 
 
@@ -37,7 +43,7 @@ public class NodeUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 		// clear events
 		OnClick = null;
 	}
-	
+
 
 	// Drag Node
 
@@ -57,6 +63,9 @@ public class NodeUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 		foreach (NodeUi ui in arr) {
 			ui.GenerateConnections();
 		}
+
+		// emit click event
+		if (OnDragging != null) { OnDragging.Invoke(); }
 	}
 
 
@@ -65,16 +74,14 @@ public class NodeUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 	}
 
 
-	// Click on node
+	// Click Node
 
 	public void OnPointerClick (PointerEventData eventData) {
 		// if camera is disabled is because we were dragging, so escape
 		if (!MapCamera.enabled) { return; }
 
 		// emit click event
-		if (OnClick != null) {
-			OnClick.Invoke();
-		}
+		if (OnClick != null) { OnClick.Invoke(); }
 	}
 
 
@@ -91,14 +98,15 @@ public class NodeUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 		container.transform.SetParent(transform, false);
 		container.name = "Paths";
 
+		pathDic = new Dictionary<Node, NodePath>();
 		for (int i = 0; i < node.Links.Count; i++) {
 			Node link = node.Links[i];
-			GenerateConnection(container, link);
+			pathDic[link] = GenerateConnection(container, link);
 		}
 	}
 
 
-	private void GenerateConnection (GameObject rootContainer, Node link) {
+	private NodePath GenerateConnection (GameObject rootContainer, Node link) {
 		// create path container inside the node
 		GameObject container = new GameObject();
 		container.transform.SetParent(rootContainer.transform, false);
@@ -120,15 +128,26 @@ public class NodeUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 		float step = (length) / (maxPoints + 1);
 
 		// create and locate line points
+		NodePath path = new NodePath();
+
 		for (int i = 1; i <= maxPoints; i++) {
-			GameObject point = (GameObject)GameObject.Instantiate<GameObject>(Scene.instance.pathPrefab);
+			NodePathPoint point = GameObject.Instantiate<GameObject>(Scene.instance.pathPrefab).GetComponent<NodePathPoint>();
 			point.name = "Point" + i;
 			point.transform.SetParent(container.transform);
 			point.transform.localPosition = Vector3.zero;
 			point.transform.Translate(vec.normalized * step * i);
 			point.transform.Translate(vec.normalized * dotRadius);
 			point.gameObject.SetActive(true);
+
+			path.Add(point);
 		}
+
+		return path;
+	}
+
+
+	public NodePath GetPathToNode (Node targetNode) {
+		return pathDic[targetNode];
 	}
 
 }

@@ -21,13 +21,9 @@ public class Scene : MonoBehaviour {
 		// initialize background
 		Sprite bg  = transform.Find("Background").GetComponent<SpriteRenderer>().sprite;
 
-		// initialize map camera
+		// initialize camera
 		MapCamera mapCamera = gameObject.AddComponent<MapCamera>();
-		mapCamera.Init(
-			Camera.main, 
-			bg.bounds
-			//new Bounds(Vector3.zero, new Vector3(1000, 1000, 0))
-		);
+		mapCamera.Init(Camera.main, bg.bounds);
 
 		// create node graph
 		graph = new NodeGraph();
@@ -47,24 +43,12 @@ public class Scene : MonoBehaviour {
 
 
 	public void ClickOnNode (Node node) {
-		print ("Clicked on node " + node);
-
 		List<Node> path = graph.SearchPath(player.CurrentNode, node);
 		player.FollowPath(path);
-
-		//player.currentNode = node;
-		//player.SetPosition(node.X, node.Y);
-
-
 	}
 
-
-	/*private void SetEventListeners () {
-		
+	public void DragOnNode (Node node) {
+		player.SetPosition(player.CurrentNode.X, player.CurrentNode.Y);
 	}
-	
 
-	private void OnClick (NodeUi nodeUi) {
-		print ("Clicked on node " + nodeUi);
-	}*/
 }
