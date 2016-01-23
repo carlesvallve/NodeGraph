@@ -17,8 +17,6 @@ public class NodeUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 	private Node node;
 	private Dictionary<Node, NodePath> pathDic = new Dictionary<Node, NodePath>();
 
-	private bool drag = false;
-
 
 	public void Init(GameObject container, Node node) {
 		this.node = node;
@@ -48,7 +46,7 @@ public class NodeUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 	// Drag Node
 
 	public void OnBeginDrag (PointerEventData eventData) {
-		MapCamera.enabled = false;
+		MapCamera.active = false;
 	}
 
 
@@ -70,7 +68,7 @@ public class NodeUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
 
 	public void OnEndDrag (PointerEventData eventData) {
-		MapCamera.enabled = true;
+		MapCamera.active = true;
 	}
 
 
@@ -78,7 +76,7 @@ public class NodeUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
 	public void OnPointerClick (PointerEventData eventData) {
 		// if camera is disabled is because we were dragging, so escape
-		if (!MapCamera.enabled) { return; }
+		if (!MapCamera.active) { return; }
 
 		// emit click event
 		if (OnClick != null) { OnClick.Invoke(); }
@@ -146,7 +144,7 @@ public class NodeUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 	}
 
 
-	public NodePath GetPathToNode (Node targetNode) {
+	public NodePath GetConnectionToNode (Node targetNode) {
 		return pathDic[targetNode];
 	}
 

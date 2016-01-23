@@ -58,7 +58,8 @@ public class NodeGraph {
 	}
 
 
-	// not used for anything. Recursevily traverses all nodes in the nodegraph
+	// Recursevily traverses all nodes in the nodegraph
+	// Not used for anything at the moment
 
 	public void Traverse(Node root) {
 		Debug.Log(root.name);
@@ -122,7 +123,6 @@ public class NodeGraph {
 
 
 		// This is how it would look if we could use Linq...
-
 		/*List<Node> tmp =  nx.Friends
 		// if a friend is not visited
 		.Where (c => !visited.Contains(c) ).ToList(); 

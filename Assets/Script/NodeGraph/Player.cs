@@ -21,8 +21,8 @@ public class Player : MonoBehaviour {
 	}
 
 	private TextMesh text;
+
 	private Sequence pathSequence;
-	private List<Node> newPath;
 
 	public bool moving { get; private set; }
 
@@ -47,18 +47,7 @@ public class Player : MonoBehaviour {
 	}
 
 
-	public void SetNewPath(List<Node> path) {
-		if (pathSequence != null && pathSequence.IsActive()) {
-			newPath = path;
-		} else {
-			FollowPath(path);
-		}
-	}
-
-
 	public void FollowPath (List<Node> path) {
-		newPath = null;
-
 		// generate a list of waypoint lines
 		List<Vector3[]> waypoints = GenerateWaypoints(path);
 
@@ -106,7 +95,7 @@ public class Player : MonoBehaviour {
 
 			if (i < path.Count - 1) {
 				// add the list of points connecting to next node
-				NodePath line = path[i].ui.GetPathToNode(path[i + 1]);
+				NodePath line = path[i].ui.GetConnectionToNode(path[i + 1]);
 				for (int n = 0; n < line.Count; n++) {	
 					points[i].Add(line[n].transform.position);
 				}

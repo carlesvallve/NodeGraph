@@ -35,7 +35,7 @@ public class Scene : MonoBehaviour {
 		graph.RenderNodeGraph(nodePrefab, nodes);
 
 		// search path from node to node
-		List<Node> path = graph.SearchPath(nodes["Darian"], nodes["Derek"]);
+		//List<Node> path = graph.SearchPath(nodes["Darian"], nodes["Derek"]);
 
 		// create player
 		player = Instantiate<GameObject>(playerPrefab).GetComponent<Player>();
@@ -48,6 +48,13 @@ public class Scene : MonoBehaviour {
 	}
 
 
+	// Event Listeners
+
+	public void DragOnNode (Node node) {
+		player.SetPosition(player.CurrentNode.X, player.CurrentNode.Y);
+	}
+
+
 	public void ClickOnNode (Node node) {
 		if (player.moving) {
 			targetNode = node;
@@ -55,13 +62,6 @@ public class Scene : MonoBehaviour {
 			List<Node> path = graph.SearchPath(player.CurrentNode, node);
 			player.FollowPath(path);
 		}
-		
-		//player.FollowPath(path);
-		//player.SetNewPath(path);
-	}
-
-	public void DragOnNode (Node node) {
-		player.SetPosition(player.CurrentNode.X, player.CurrentNode.Y);
 	}
 
 

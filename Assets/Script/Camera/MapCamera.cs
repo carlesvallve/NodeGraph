@@ -9,7 +9,7 @@ using DG.Tweening;
 
 	public class MapCamera : MonoBehaviour {
 
-		public static bool enabled = true;
+		public static bool active = true;
 
 		// accessor to refer to the map unity camera 
 		public static UnityCamera currentCamera { get; set; }
@@ -49,7 +49,7 @@ using DG.Tweening;
 
 
 		void Update () {
-			if (!enabled) { 
+			if (!active) { 
 				return; 
 			}
 
