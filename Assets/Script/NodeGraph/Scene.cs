@@ -14,6 +14,8 @@ public class Scene : MonoBehaviour {
 	private NodeGraph graph;
 	private Player player;
 
+	private Node targetNode;
+
 
 	void Start () {
 		instance = this;
@@ -39,16 +41,36 @@ public class Scene : MonoBehaviour {
 		player = Instantiate<GameObject>(playerPrefab).GetComponent<Player>();
 		player.gameObject.transform.SetParent(transform, false);
 		player.Init(nodes["Aaron"]);
+
+		player.OnArrivedToNode += () => {
+			PlayerArrivedToNode();
+		};
 	}
 
 
 	public void ClickOnNode (Node node) {
-		List<Node> path = graph.SearchPath(player.CurrentNode, node);
-		player.FollowPath(path);
+		if (player.moving) {
+			targetNode = node;
+		} else {
+			List<Node> path = graph.SearchPath(player.CurrentNode, node);
+			player.FollowPath(path);
+		}
+		
+		//player.FollowPath(path);
+		//player.SetNewPath(path);
 	}
 
 	public void DragOnNode (Node node) {
 		player.SetPosition(player.CurrentNode.X, player.CurrentNode.Y);
+	}
+
+
+	public void PlayerArrivedToNode () {
+		if (targetNode != null) {
+			List<Node> path = graph.SearchPath(player.CurrentNode, targetNode);
+			player.FollowPath(path);
+			targetNode = null;
+		}
 	}
 
 }

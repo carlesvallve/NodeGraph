@@ -6,6 +6,9 @@ using DG.Tweening;
 
 public class Player : MonoBehaviour {
 
+	public delegate void OnArrivedToNodeHandler();
+	public event OnArrivedToNodeHandler OnArrivedToNode;
+
 	private Node currentNode;
 	public Node CurrentNode { 
 		get {
@@ -19,6 +22,9 @@ public class Player : MonoBehaviour {
 
 	private TextMesh text;
 	private Sequence pathSequence;
+	private List<Node> newPath;
+
+	public bool moving { get; private set; }
 
 
 	public void Init (Node initialNode) {
@@ -41,22 +47,36 @@ public class Player : MonoBehaviour {
 	}
 
 
+	public void SetNewPath(List<Node> path) {
+		if (pathSequence != null && pathSequence.IsActive()) {
+			newPath = path;
+		} else {
+			FollowPath(path);
+		}
+	}
+
+
 	public void FollowPath (List<Node> path) {
+		newPath = null;
+
 		// generate a list of waypoint lines
 		List<Vector3[]> waypoints = GenerateWaypoints(path);
 
 		// kill previous sequence
 		if (pathSequence != null && pathSequence.IsActive()) {
 			pathSequence.Kill(false);
+			moving = false;
 		}
 
 		// start the movement sequence
 		int num = 0;
-		pathSequence = DOTween.Sequence();
+		pathSequence = DOTween.Sequence()
+		.OnStart(() => { moving = true; })
+		.OnComplete(() => { moving = false; });
 
 		// iterate along each line to follow
 		for (int i = 0; i < waypoints.Count; i++) {
-			float duration =  waypoints[i].Length * 0.1f;
+			float duration = waypoints[i].Length * 0.1f;
 
 			pathSequence.Append(
 				transform.DOLocalPath(waypoints[i], duration, PathType.Linear, PathMode.Ignore, 10).
@@ -66,6 +86,11 @@ public class Player : MonoBehaviour {
 					num++;
 					CurrentNode = path[num]; 
 					print(CurrentNode.name);
+
+					// emit arrived event
+					if (OnArrivedToNode != null) { 
+						OnArrivedToNode.Invoke(); 
+					}
 				})
 			)
 			.AppendInterval(0.01f);
