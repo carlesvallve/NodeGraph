@@ -26,6 +26,8 @@ public class Player : MonoBehaviour {
 
 	public bool moving { get; private set; }
 
+	private float speed = 0.05f;
+
 
 	public void Init (Node initialNode) {
 		name = "Player";
@@ -65,7 +67,7 @@ public class Player : MonoBehaviour {
 
 		// iterate along each line to follow
 		for (int i = 0; i < waypoints.Count; i++) {
-			float duration = waypoints[i].Length * 0.1f;
+			float duration = waypoints[i].Length * speed;
 
 			pathSequence.Append(
 				transform.DOLocalPath(waypoints[i], duration, PathType.Linear, PathMode.Ignore, 10).
