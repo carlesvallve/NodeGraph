@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+//using System.Linq;
 
 public class NodeGraph {
 
@@ -115,23 +115,20 @@ public class NodeGraph {
 
 		// we then can order the list by any desired conditions, 
 		// in this case distance
-		tmp = tmp.OrderBy(t => {
-			Vector2 p1 = new Vector2(t.X, t.Y);
+		tmp.Sort(delegate(Node n1, Node n2) {
+			Vector2 p1 = new Vector2(n1.X, n1.Y);
 			Vector2 p2 = new Vector2(to.X, to.Y);
-			return (p1 - p2).sqrMagnitude;
-		}).ToList();
+			float dist1 = (p1 - p2).sqrMagnitude;
 
+			Vector2 p3 = new Vector2(n2.X, n2.Y);
+			Vector2 p4 = new Vector2(to.X, to.Y);
+			float dist2 = (p3 - p4).sqrMagnitude;
 
-		// This is how it would look if we could use Linq...
-		/*List<Node> tmp =  nx.Friends
-		// if a friend is not visited
-		.Where (c => !visited.Contains(c) ).ToList(); 
-		// we can order here by several conditions, in this case distance         
-		.OrderBy(t => {
-			Vector2 p1 = new Vector2(t.X, t.Y);
-			Vector2 p2 = new Vector2(goal.X, goal.Y);
-			return (p1 - p2).sqrMagnitude;
-		}).ToList();*/
+			// sort by dist in descending order
+			int a = dist1.CompareTo(dist2);
+
+			return a;
+		});
 
 		
 		if (tmp != null){
