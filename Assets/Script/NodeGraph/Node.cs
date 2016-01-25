@@ -29,7 +29,7 @@ public class Node {
 
 	public void SetLink (Node p) {
 		// escape if we are already linked
-		if (IsLinkedTo(p)) {
+		if (Links.Contains(p)) {
 			return;
 		}
 
@@ -39,16 +39,5 @@ public class Node {
 		// links are always bidirectional
 		p.SetLink(this); 
 	}
-
-
-	public bool IsLinkedTo (Node p) {
-		foreach (Node link in Links) {
-			if (p == link) { return true; }
-		}
-
-		return false;
-	}
-
-	
 	
 }

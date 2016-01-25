@@ -49,7 +49,7 @@ public class Player : MonoBehaviour {
 	}
 
 
-	public void FollowPath (List<Node> path) {
+	public float FollowPath (List<Node> path) {
 		// generate a list of waypoint lines
 		List<Vector3[]> waypoints = GenerateWaypoints(path);
 
@@ -86,6 +86,8 @@ public class Player : MonoBehaviour {
 			)
 			.AppendInterval(0.01f);
 		}
+
+		return pathSequence.Duration();
 	}
 
 
